@@ -1,2 +1,6 @@
-# recursive_Neyman_rnabox
-R codes for numerical experiments for new recursive Neyman algorithm with bounds on strata sizes
+# R code with numerical experiments from paper (in preparation):
+# Wesolowski J., Wieczorkowski R., Wojciak W. (2023?), 
+# Adjusting the recursive Neyman algorithm for two-sided bounds on sample strata sizes.
+
+## Main code with numerical experiments is in the file "Numerical_experiments_rnabox.R"
+
