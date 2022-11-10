@@ -169,7 +169,7 @@ if (max(abs((al_fpi-alc)))>1) { stop("Bad allocation fpia!") }
 
 options(digits=10)
 
-ex<-microbenchmark(times=10,unit="ms",
+ex<-microbenchmark(times=100,unit="ms",
                    fpia=fpia(n,Nh,Sh, mh, Mh)$nh,
                    rnabox=dopt(n, dh, mh, Mh)
 )
