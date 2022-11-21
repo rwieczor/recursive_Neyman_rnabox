@@ -160,7 +160,7 @@ h_under <- sum(alc<=mh)  # number of take-all strata
 h_over <- sum(alc>=Mh)  # number of take-all strata  
 
 
-al_rnabox <- round(stratallo::dopt(n, dh, mh, Mh))
+al_rnabox <- round(stratallo::rnabox(n, dh, mh, Mh))
 if (max(abs((al_rnabox-alc)))>1) { stop("Bad allocation rnabox!") }
 
 
@@ -171,7 +171,7 @@ options(digits=10)
 
 ex<-microbenchmark(times=100,unit="ms",
                    fpia=fpia(n,Nh,Sh, mh, Mh)$nh,
-                   rnabox=dopt(n, dh, mh, Mh)
+                   rnabox=stratallo::rnabox(n, dh, mh, Mh)
 )
 
 
