@@ -346,10 +346,10 @@ p2 <-
     strip.background = element_blank(), strip.text.x = element_blank()) +
   labs(x=" ", y= 'Take-max \nstrata [%]') +
   #coord_cartesian(xlim=c(0.1,0.7))
-  coord_cartesian(xlim=c(s1/N,s2/N)) 
+  coord_cartesian(xlim=c(s1/N,s2/N)+0.02*(fig_n==1)) 
   #scale_x_continuous(breaks = seq(0.0,0.6,0.1)) +
-  #scale_x_continuous(breaks = scales::pretty_breaks(5)) +
-  #scale_y_continuous(breaks = scales::pretty_breaks(5))
+  #scale_x_continuous(breaks = scales::pretty_breaks(4)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(4))
 
 
 p3 <- 
@@ -367,10 +367,10 @@ p3 <-
         strip.background = element_blank(), strip.text.x = element_blank()) +
   labs(x="Sample fraction", y= 'Take-min \nstrata [%]') +
   #coord_cartesian(xlim=c(0.1,0.7)) +
-  coord_cartesian(xlim=c(s1/N,s2/N)) +
+  coord_cartesian(xlim=c(s1/N,s2/N)+0.02*(fig_n==1)) +
   #scale_x_continuous(breaks = seq(s1/N,s2/N,0.1)) +
-  scale_x_continuous(breaks = scales::pretty_breaks(5)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(7))
+  scale_x_continuous(breaks = scales::pretty_breaks(4)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(4))
 
 
 pp <- 
