@@ -257,7 +257,7 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
     scale_fill_manual(
       drop = TRUE,
       name = "Series",
-      values = c("grey20", "grey40", "grey60", "grey80"),
+      values = c("grey20", "grey55", "grey80", "green"),
       labels = c("take-max", "take-neyman", "take-min", "take-min/take-max \n(m = M)")
     ) +
     theme_bw(base_size = 12) +
