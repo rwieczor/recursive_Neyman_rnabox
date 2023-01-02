@@ -5,7 +5,6 @@
 
 # Load libraries ----
 
-setwd("/Volumes/Data/studia/doktoranckie/metoda_reprezentacyjna/R_code/recursive_Neyman_rnabox/")
 
 library(stratallo) # implementation of 'rnabox' algorithm
 library(dplyr)
@@ -74,7 +73,12 @@ generate_population <- function(pop_n = 1) {
     # plot(Nh*Sh)
     # hist(Sh*Nh)
 
-    # Generation of lower and upper bounds - method used in JSSaM article
+    # Generation of lower and upper bounds - based on method used in article:
+    # Jacek Wesołowski, Robert Wieczorkowski, Wojciech Wójciak, 
+    # Optimality of the recursive Neyman allocation, Journal of Survey Statistics and 
+    #   Methodology (2022) 10, 1263–1275.
+    # (added part with lower bounds)
+    
     # improving population to have allocation with values greater than 0
     # using integer allocation algorithm
     mh <- rep(0, length(Nh)) # lower bounds
@@ -164,9 +168,9 @@ get_execution_times <- function(pop_n = 1) {
       # options(digits = 10)
       ex <- microbenchmark(
         fpia = fpia(n, Nh, Sh, mh, Mh)$nh,
-        rnabox = stratallo::rnabox(n, dh, mh, Mh),
+        RNABOX = stratallo::rnabox(n, dh, mh, Mh),
         times = 100,
-        unit = "ms"
+        unit = "ns"
       )
       # summary(ex)
       # autoplot(ex)
@@ -242,7 +246,7 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
   H <- unique(data$H)
 
   tab_take <- tidyr::gather(
-    data[data$Algorithm == "rnabox", ],
+    data[data$Algorithm == "RNABOX", ],
     "series",
     "value",
     c("n_take_max", "n_take_neyman", "n_take_min", "n_take_min_max"), factor_key = TRUE
@@ -303,7 +307,7 @@ fig_12 <- p1_times + p2_times + p1_take + p2_take +
     title = "Time comparison of selected algorithms",
     theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   ) &
-  theme(legend.justification = "left")
+  theme(legend.justification = "left",legend.text = element_text(face = "italic"))
 fig_12
 ggsave(
   "fig_12_rnabox.pdf",
@@ -316,7 +320,8 @@ ggsave(
 
 p3_times <- plot_times(readRDS("tab3.rds"), title = NULL)
 p3_take <- plot_take(readRDS("tab3.rds"))
-fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) & theme(legend.justification = "left")
+fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) & 
+  theme(legend.justification = "left",legend.text = element_text(face = "italic"))
 fig_3
 ggsave(
   "fig_3_rnabox.pdf",
