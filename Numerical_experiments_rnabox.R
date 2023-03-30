@@ -22,6 +22,7 @@ source("CapacityScaling.R")
 source("SimpleGreedy.R")
 source("fpia.R")
 source("gen_population.R")
+source("odsa_JW.R")
 
 # Custom functions ----
 
@@ -153,7 +154,7 @@ get_execution_times <- function(pop_n = 1) {
       n_take_min_max <- sum(mh == Mh)
       n_take_min <- n_take_min - n_take_min_max
       n_take_max <- n_take_max - n_take_min_max
-      n_take_neyman <- sum(alc > mh & alc < Mh)
+      n_take_Neyman <- sum(alc > mh & alc < Mh)
 
       al_rnabox <- round(stratallo::rnabox(n, dh, mh, Mh))
       if (max(abs((al_rnabox - alc))) > 1) {
@@ -190,7 +191,7 @@ get_execution_times <- function(pop_n = 1) {
           n_take_min = n_take_min,
           n_take_max = n_take_max,
           n_take_min_max = n_take_min_max,
-          n_take_neyman = n_take_neyman
+          n_take_Neyman = n_take_Neyman
         )
 
       tab <- bind_rows(tab, exi)
@@ -202,6 +203,7 @@ get_execution_times <- function(pop_n = 1) {
 plot_times <- function(data,
                        legend.position = "right",
                        title = "Time comparison of selected algorithms",
+                       #title = " ",
                        y_lab = "Time [miliseconds]") {
   data <- data %>% mutate(
     population = paste(H, "strata, N =", N),
@@ -249,12 +251,12 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
     data[data$Algorithm == "RNABOX", ],
     "series",
     "value",
-    c("n_take_max", "n_take_neyman", "n_take_min", "n_take_min_max"), factor_key = TRUE
+    c("n_take_max", "n_take_Neyman", "n_take_min", "n_take_min_max"), factor_key = TRUE
   )
   tab_take <- tab_take[tab_take$value != 0, ]
   tab_take$pct <- round((tab_take$value / tab_take$H) * 100, 1)
 
-  # tab_take$series must be a factor with levels: "n_take_max", "n_take_neyman", "n_take_max".
+  # tab_take$series must be a factor with levels: "n_take_max", "n_take_Neyman", "n_take_max".
   p <- ggplot(data = tab_take, mapping = aes(x = f, y = value)) +
     geom_bar(mapping = aes(fill = series), position = "stack", stat = "identity", width = 0.03) +
     facet_wrap(~population) +
@@ -262,7 +264,7 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
       drop = TRUE,
       name = "Series",
       values = c("grey20", "grey55", "grey80", "green"),
-      labels = c("take-max", "take-neyman", "take-min", "take-min/take-max \n(m = M)")
+      labels = c("take-max", "take-Neyman", "take-min", "take-min/take-max \n(m = M)")
     ) +
     theme_bw(base_size = 12) +
     theme(
@@ -304,13 +306,13 @@ p2_take <- plot_take(readRDS("tab2.rds"), y_lab = NULL)
 fig_12 <- p1_times + p2_times + p1_take + p2_take +
   plot_layout(ncol = 2, heights = c(2, 1)) +
   plot_annotation(
-    title = "Time comparison of selected algorithms",
+    title = " ",
     theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   ) &
   theme(legend.justification = "left",legend.text = element_text(face = "italic"))
 fig_12
 ggsave(
-  "fig_12_rnabox.pdf",
+  "fig_12.pdf",
   fig_12,
   device = "pdf",
   dpi = 600,
@@ -324,7 +326,7 @@ fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) &
   theme(legend.justification = "left",legend.text = element_text(face = "italic"))
 fig_3
 ggsave(
-  "fig_3_rnabox.pdf",
+  "fig_3.pdf",
   fig_3,
   device = "pdf",
   dpi = 600,
