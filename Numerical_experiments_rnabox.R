@@ -4,9 +4,6 @@
 # Adjusting the recursive Neyman algorithm for two-sided bounds on sample strata sizes.
 
 # Load libraries ----
-
-
-library(stratallo) # implementation of 'rnabox' algorithm
 library(dplyr)
 library(microbenchmark)
 library(bench)
@@ -16,13 +13,11 @@ library(ggrepel)
 library(patchwork)
 
 # R codes of the algorithms ----
-
-# integer allocation algorithms, fixed point iteration algorithm
 source("CapacityScaling.R")
 source("SimpleGreedy.R")
 source("fpia.R")
 source("gen_population.R")
-source("odsa_JW.R")
+rnabox <- stratallo::rnabox
 
 # Custom functions ----
 
@@ -75,11 +70,11 @@ generate_population <- function(pop_n = 1) {
     # hist(Sh*Nh)
 
     # Generation of lower and upper bounds - based on method used in article:
-    # Jacek Wesołowski, Robert Wieczorkowski, Wojciech Wójciak, 
-    # Optimality of the recursive Neyman allocation, Journal of Survey Statistics and 
+    # Jacek Wesołowski, Robert Wieczorkowski, Wojciech Wójciak,
+    # Optimality of the recursive Neyman allocation, Journal of Survey Statistics and
     #   Methodology (2022) 10, 1263–1275.
     # (added part with lower bounds)
-    
+
     # improving population to have allocation with values greater than 0
     # using integer allocation algorithm
     mh <- rep(0, length(Nh)) # lower bounds
@@ -95,18 +90,18 @@ generate_population <- function(pop_n = 1) {
     dh <- Nh * Sh
     mh <- mh[ix]
     Mh <- Mh[ix]
-    mh <- pmin(100,Mh) # additional lower constraints
+    mh <- pmin(100, Mh) # additional lower constraints
 
     # removing cases with mh=Mh
-    ix <- which(!(mh==Mh))
+    ix <- which(!(mh == Mh))
     Nh <- Nh[ix]
     Sh <- Sh[ix]
-    dh <- Nh*Sh
+    dh <- Nh * Sh
     mh <- mh[ix]
     Mh <- Mh[ix]
 
-    (s1<-sum(mh))
-    (s2<-sum(Mh))
+    (s1 <- sum(mh))
+    (s2 <- sum(Mh))
   } else if (pop_n == 3) {
     # Generation of a simple population used in article published in JSSaM (2021, fig.2)
     # added lower constraints
@@ -121,7 +116,7 @@ generate_population <- function(pop_n = 1) {
     print("pop_n must take on a single value from {1, 2, 3}")
   }
 
-  return(list(Nh = Nh, Sh = Sh, mh = mh, Mh = Mh, dh = dh))
+  list(Nh = Nh, Sh = Sh, mh = mh, Mh = Mh, dh = dh)
 }
 
 # Creates data with times for selected algorithms and different fractions
@@ -156,7 +151,7 @@ get_execution_times <- function(pop_n = 1) {
       n_take_max <- n_take_max - n_take_min_max
       n_take_Neyman <- sum(alc > mh & alc < Mh)
 
-      al_rnabox <- round(stratallo::rnabox(n, dh, mh, Mh))
+      al_rnabox <- round(rnabox(n, dh, mh, Mh))
       if (max(abs((al_rnabox - alc))) > 1) {
         stop("Bad allocation rnabox!")
       }
@@ -197,13 +192,13 @@ get_execution_times <- function(pop_n = 1) {
       tab <- bind_rows(tab, exi)
     }
   }
-  return(tab)
+  tab
 }
 
 plot_times <- function(data,
                        legend.position = "right",
                        title = "Time comparison of selected algorithms",
-                       #title = " ",
+                       # title = " ",
                        y_lab = "Time [miliseconds]") {
   data <- data %>% mutate(
     population = paste(H, "strata, N =", N),
@@ -251,7 +246,8 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
     data[data$Algorithm == "RNABOX", ],
     "series",
     "value",
-    c("n_take_max", "n_take_Neyman", "n_take_min", "n_take_min_max"), factor_key = TRUE
+    c("n_take_max", "n_take_Neyman", "n_take_min", "n_take_min_max"),
+    factor_key = TRUE
   )
   tab_take <- tab_take[tab_take$value != 0, ]
   tab_take$pct <- round((tab_take$value / tab_take$H) * 100, 1)
@@ -279,7 +275,7 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
     scale_y_continuous(
       breaks = scales::pretty_breaks(10),
       sec.axis = sec_axis(
-        trans = ~(./H)*100,
+        trans = ~ (. / H) * 100,
         breaks = seq(0, 100, 20),
         labels = function(x) scales::percent(x, scale = 1)
       )
@@ -288,31 +284,33 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
 }
 
 # Generate Populations, Compute Optimal Alloc., Compare Times ----
-
 tab1 <- get_execution_times(pop_n = 1) # population generated with Nrep=100
 tab2 <- get_execution_times(pop_n = 2) # population generated with Nrep=200
 tab3 <- get_execution_times(pop_n = 3) # a small population
 
-saveRDS(tab1, "tab1.rds")
-saveRDS(tab2, "tab2.rds")
-saveRDS(tab3, "tab3.rds")
+# saveRDS(tab1, "tab1.rds")
+# saveRDS(tab2, "tab2.rds")
+# saveRDS(tab3, "tab3.rds")
+# tab1 <- readRDS("tab1.rds")
+# tab2 <- readRDS("tab2.rds")
+# tab3 <- readRDS("tab3.rds")
 
 # Create plots ----
 
-p1_times <- plot_times(readRDS("tab1.rds"), title = NULL, legend.position = "none")
-p1_take <- plot_take(readRDS("tab1.rds"), legend.position = "none")
-p2_times <- plot_times(readRDS("tab2.rds"), title = NULL, y_lab = NULL)
-p2_take <- plot_take(readRDS("tab2.rds"), y_lab = NULL)
+p1_times <- plot_times(tab1, title = NULL, legend.position = "none")
+p1_take <- plot_take(tab1, legend.position = "none")
+p2_times <- plot_times(tab2, title = NULL, y_lab = NULL)
+p2_take <- plot_take(tab2, y_lab = NULL)
 fig_12 <- p1_times + p2_times + p1_take + p2_take +
   plot_layout(ncol = 2, heights = c(2, 1)) +
   plot_annotation(
     title = " ",
     theme = theme(plot.title = element_text(hjust = 0.5, face = "bold"))
   ) &
-  theme(legend.justification = "left",legend.text = element_text(face = "italic"))
+  theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_12
 ggsave(
-  "fig_12.pdf",
+  "rnabox_fig_12.pdf",
   fig_12,
   device = "pdf",
   dpi = 600,
@@ -320,13 +318,13 @@ ggsave(
   height = 10 / 1.618 # height = 8/1.618
 )
 
-p3_times <- plot_times(readRDS("tab3.rds"), title = NULL)
-p3_take <- plot_take(readRDS("tab3.rds"))
-fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) & 
-  theme(legend.justification = "left",legend.text = element_text(face = "italic"))
+p3_times <- plot_times(tab3, title = NULL)
+p3_take <- plot_take(tab3)
+fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) &
+  theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_3
 ggsave(
-  "fig_3.pdf",
+  "rnabox_fig_3.pdf",
   fig_3,
   device = "pdf",
   dpi = 600,
