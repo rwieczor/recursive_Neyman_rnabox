@@ -22,6 +22,8 @@
 fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100, tol = .Machine$double.eps * 1000) {
   H <- seq_along(Nh)
   dh <- Sh * Nh
+  dh2mh2 <- (dh/mh)^2
+  dh2Mh2 <- (dh/Mh)^2
 
   lambda <- if (is.null(lambda0)) {
     (sum(dh)^2) / (n^2) # according to article MSW
@@ -41,8 +43,8 @@ fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100,
   iter <- 0
   while (1) {
     iter <- iter + 1
-    L <- which((dh^2) / (mh^2) <= lambda)
-    U <- which((dh^2) / (Mh^2) >= lambda)
+    L <- which(dh2mh2 <= lambda)
+    U <- which(dh2Mh2 >= lambda)
     Hc <- H[-c(L, U)]
 
     lambda_n <- (sum(dh[Hc]) / (n - sum(mh[L]) - sum(Mh[U])))^2
@@ -67,9 +69,8 @@ glambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
   H <- seq_along(Nh)
   dh <- Sh * Nh
 
-  L <- which((dh^2) / (mh^2) <= lambda)
-  U <- which((dh^2) / (Mh^2) >= lambda)
-  Hc <- H[-c(L, U)]
+  L <- which((dh/mh)^2 <= lambda)
+  U <- which((dh/Mh)^2 >= lambda)
 
   nh <- dh / sqrt(lambda)
   nh[L] <- mh[L]
@@ -82,8 +83,8 @@ philambda <- function(lambda, n, Nh, Sh, mh = NULL, Mh = NULL) {
   H <- seq_along(Nh)
   dh <- Sh * Nh
 
-  L <- which((dh^2) / (mh^2) <= lambda)
-  U <- which((dh^2) / (Mh^2) >= lambda)
+  L <- which((dh/mh)^2 <= lambda)
+  U <- which((dh/Mh)^2 >= lambda)
   Hc <- H[-c(L, U)]
 
   # cat("L: ",L," U: ",U,"\n")
