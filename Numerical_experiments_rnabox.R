@@ -1,7 +1,7 @@
 
 # R code with numerical experiments from paper (in preparation):
 # Wesolowski J., Wieczorkowski R., Wojciak W. (2023?),
-# Adjusting the recursive Neyman algorithm for two-sided bounds on sample strata sizes.
+# Recursive Neyman Algorithm for Optimum Sample Allocation under Box Constraints on Sample Sizes in Strata.
 
 # Load libraries ----
 library(dplyr)
@@ -118,6 +118,89 @@ generate_population <- function(pop_n = 1) {
 
   list(Nh = Nh, Sh = Sh, mh = mh, Mh = Mh, dh = dh)
 }
+
+
+# Creates data with variances for selected algorithms and different fractions
+# (examination of rounding effect)
+get_variances_rounding <- function(pop_n = 1) {
+  # pop_n - number of population (1,2 or 3)
+  pop <- generate_population(pop_n)
+  Nh <- pop$Nh
+  Sh <- pop$Sh
+  mh <- pop$mh
+  Mh <- pop$Mh
+  dh <- pop$dh
+  
+  
+  # variance estimation for given allocation
+  varal <- function(Nh,Sh,nh)
+  {
+    return( sum(Nh * (Nh - nh) * Sh*Sh / nh) )
+  }
+  
+  
+  tab <- NULL
+  
+  sum_m <- sum(mh)
+  sum_M <- sum(Mh)
+  N <- sum(Nh)
+  dh <- Nh * Sh
+  
+  for (f in seq(0.1,0.5,0.1)) {
+  #for (f in seq(sum_m / N, sum_M / N, 0.1)) {
+    print(paste("Fraction:", f))
+    N <- sum(Nh)
+    n <- round(f * N)
+    
+    if (n > sum_m && n < sum_M) {
+      alc <- CapacityScaling(n, Nh, Sh, mh = mh, Mh = Mh)
+      V0<-varal(Nh,Sh,alc)
+      
+      al_rnabox <- (stratallo::rnabox(n, dh, mh, Mh))
+      al_rnabox_round <- round_oric(al_rnabox)
+      #al_fpi <- fpia(n, Nh, Sh, mh, Mh)$nh
+      v_rnabox <- varal(Nh,Sh,al_rnabox)
+      v_rnabox_round <- varal(Nh,Sh,al_rnabox_round)
+  
+      tabi <- data.frame(N=N,H=length(Nh),f=f,n=n,n_round=sum(al_rnabox_round),
+                         rv_rnabox=v_rnabox/V0,
+                         rv_rnabox_round=v_rnabox_round/V0
+                         )
+      
+      tab <- bind_rows(tab, tabi)
+    }
+  }
+  
+  
+  return(tab)
+}
+
+
+options(digits = 6)
+(tab1 <- get_variances_rounding(pop_n=1))
+(tab2 <- get_variances_rounding(pop_n=2))
+(tab3 <- get_variances_rounding(pop_n=3))
+
+
+tab <- bind_cols(dplyr::select(tab1,f,n1=n,rv1=rv_rnabox),
+       dplyr::select(tab2,n2=n,rv2=rv_rnabox))
+colnames(tab)<-c("fraction","$n$","$V/V_0$","$n$","$V/V_0$")
+tab_tex <- kable(tab,format="latex",digits=6,align="r",
+                 caption = "\\label{tab:} 	
+\\footnotesize Variances $V$ and $V_0$ are based on optimal non-integer
+and optimal integer allocations respectively. 
+For variances $\\tilde{V}$, based on rounded optimal non-integer allocation,  
+we systematically get $\\tilde{V}/V_0=1$ (up to five decimal digits).")
+
+cat(tab_tex,file="tab_ratio_variances.tex")
+
+# additional lines to insert after line with text: \begin{tabular}{|r|r|r|r|r|}
+# \hline
+# sample  & \multicolumn{2}{|c|}{$H=373$} & \multicolumn{2}{|c|}{$H=691$} \\
+# \cline{2-5}
+
+
+
 
 # Creates data with times for selected algorithms and different fractions
 get_execution_times <- function(pop_n = 1) {
