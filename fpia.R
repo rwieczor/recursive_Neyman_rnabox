@@ -26,7 +26,7 @@ fpia <- function(n, Nh, Sh, mh = NULL, Mh = NULL, lambda0 = NULL, maxiter = 100,
   dh2Mh2 <- (dh/Mh)^2
 
   lambda <- if (is.null(lambda0)) {
-    (sum(dh)^2) / (n^2) # according to article MSW
+    (sum(dh)/n)^2 # according to article MSW
 
     # # initial interval for searching 'lambda' - according to J.Wesolowski
     # r <- c(dh / mh, dh / Mh)
