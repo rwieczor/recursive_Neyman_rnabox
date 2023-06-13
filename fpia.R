@@ -48,7 +48,8 @@ fpia <- function(n, Nh, Sh, mh=NULL, Mh=NULL, lambda0=NULL, maxiter=100)
     iter <- iter+1
     L<-which((dh^2)/(mh^2) <= lambda)
     U<-which((dh^2)/(Mh^2) >= lambda)
-    Hc<-setdiff(1:H,union(L,U))
+    #Hc<-setdiff(1:H,union(L,U))
+    Hc <- (1:H)[-c(L,U)]
     
     lambda_n <- (sum(dh[Hc])/(n-sum(mh[L])-sum(Mh[U])))^2
     if ( iter>maxiter || is.nan(lambda_n) || abs(lambda_n-lambda)<.Machine$double.eps*1000 ) break
@@ -81,8 +82,9 @@ glambda<-function(lambda,n,Nh, Sh, mh=NULL, Mh=NULL)
   
   L<-which((dh^2)/(mh^2) <= lambda)
   U<-which((dh^2)/(Mh^2) >= lambda)
-  Hc<-setdiff(1:H,union(L,U))
-
+  #Hc<-setdiff(1:H,union(L,U))
+  Hc <- (1:H)[-c(L,U)]
+  
   nh <- dh/sqrt(lambda)
   nh[L]<-mh[L]
   nh[U]<-Mh[U]
@@ -100,8 +102,9 @@ philambda<-function(lambda,n,Nh, Sh, mh=NULL, Mh=NULL)
   
   L<-which((dh^2)/(mh^2) <= lambda)
   U<-which((dh^2)/(Mh^2) >= lambda)
-  Hc<-setdiff(1:H,union(L,U))
-  
+  #Hc<-setdiff(1:H,union(L,U))
+  Hc <- (1:H)[-c(L,U)]
+    
   #cat("L: ",L," U: ",U,"\n")
   
   lambda_n <- (sum(dh[Hc])/(n-sum(mh[L])-sum(Mh[U])))^2
@@ -109,6 +112,5 @@ philambda<-function(lambda,n,Nh, Sh, mh=NULL, Mh=NULL)
   return(lambda_n)
   
 }
-
 
 
