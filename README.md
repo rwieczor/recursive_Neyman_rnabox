@@ -2,8 +2,7 @@
 
 R code with numerical experiments from paper (in preparation):
 Wesolowski J., Wieczorkowski R., Wojciak W. (2023?), 
-Improving stratallo: adjusting the recursive Neyman algorithm
-for box constraints on sample strata-sizes.
+Recursive Neyman Algorithm for Optimum Sample Allocation under Box Constraints on Sample Sizes in Strata.
 
 Main code with numerical experiments is in the file "Numerical_experiments_rnabox.R"
 
