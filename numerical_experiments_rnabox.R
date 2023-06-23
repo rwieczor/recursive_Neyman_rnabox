@@ -50,7 +50,7 @@ fig_1_22 <- p1_times + p22_times + p1_take + p22_take +
   theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_1_22
 ggsave(
-  "rnabox_fig_1_22.pdf",
+  "fig_rnabox_1_22.pdf",
   fig_1_22,
   device = "pdf",
   dpi = 600,
@@ -64,7 +64,7 @@ fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) &
   theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_3
 ggsave(
-  "rnabox_fig_3.pdf",
+  "fig_rnabox_3.pdf",
   fig_3,
   device = "pdf",
   dpi = 600,
@@ -78,6 +78,8 @@ options(digits = 6)
 (tab1_var <- get_variances_rounding(pop_n = 1))
 (tab2_var <- get_variances_rounding(pop_n = 2))
 (tab3_var <- get_variances_rounding(pop_n = 3))
+(tab11_var <- get_variances_rounding(pop_n = 11))
+(tab22_var <- get_variances_rounding(pop_n = 22))
 
 cap <- "\\label{tab:}
 \\footnotesize Variances $V$ and $V_0$ are based on optimal (not necessarily integer)
@@ -87,9 +89,17 @@ we systematically get $\\tilde{V}/V_0=1$ (up to five decimal digits)."
 
 tab_rvar <- bind_cols(
   dplyr::select(tab1_var, f, n1 = n, rv1 = rv_rnabox),
-  dplyr::select(tab2_var, n2 = n, rv2 = rv_rnabox)
+  dplyr::select(tab2_var, n2 = n, rv2 = rv_rnabox),
+  dplyr::select(tab11_var, n11 = n, rv11 = rv_rnabox),
+  dplyr::select(tab22_var, n22 = n, rv22 = rv_rnabox)
 )
-colnames(tab_rvar) <- c("fraction", "$n$", "$V/V_0$", "$n$", "$V/V_0$")
+colnames(tab_rvar) <- c(
+  "fraction",
+  "$n$", "$V/V_0$",
+  "$n$", "$V/V_0$",
+  "$n$", "$V/V_0$",
+  "$n$", "$V/V_0$"
+)
 tab_rvar_tex <- knitr::kable(tab_rvar,
   format = "latex", digits = 6, align = "r",
   caption = cap
