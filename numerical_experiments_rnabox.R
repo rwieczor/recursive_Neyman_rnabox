@@ -24,16 +24,16 @@ tab3 <- get_execution_times(pop_n = 3) # a small population
 tab11 <- get_execution_times(pop_n = 11) # population generated with Nrep=100
 tab22 <- get_execution_times(pop_n = 22) # population generated with Nrep=200
 
-# saveRDS(tab1, "tab1.rds")
-# saveRDS(tab2, "tab2.rds")
-# saveRDS(tab3, "tab3.rds")
-# saveRDS(tab11, "tab11.rds")
-# saveRDS(tab22, "tab22.rds")
-# tab1 <- readRDS("tab1.rds")
-# tab2 <- readRDS("tab2.rds")
-# tab3 <- readRDS("tab3.rds")
-# tab11 <- readRDS("tab11.rds")
-# tab22 <- readRDS("tab22.rds")
+# saveRDS(tab1, "./data/tab1.rds")
+# saveRDS(tab2, "./data/tab2.rds")
+# saveRDS(tab3, "./data/tab3.rds")
+# saveRDS(tab11, "./data/tab11.rds")
+# saveRDS(tab22, "./data/tab22.rds")
+# tab1 <- readRDS("./data/tab1.rds")
+# tab2 <- readRDS("./data/tab2.rds")
+# tab3 <- readRDS("./data/tab3.rds")
+# tab11 <- readRDS("./data/tab11.rds")
+# tab22 <- readRDS("./data/tab22.rds")
 
 # Create time plots ----
 
@@ -50,7 +50,7 @@ fig_1_22 <- p1_times + p22_times + p1_take + p22_take +
   theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_1_22
 ggsave(
-  "fig_rnabox_1_22.pdf",
+  "./figures/fig_rnabox_1_22.pdf",
   fig_1_22,
   device = "pdf",
   dpi = 600,
@@ -64,7 +64,7 @@ fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) &
   theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_3
 ggsave(
-  "fig_rnabox_3.pdf",
+  "./figures/fig_rnabox_3.pdf",
   fig_3,
   device = "pdf",
   dpi = 600,
@@ -104,7 +104,7 @@ tab_rvar_tex <- knitr::kable(tab_rvar,
   format = "latex", digits = 6, align = "r",
   caption = cap
 )
-cat(tab_rvar_tex, file = "tab_ratio_variances.tex")
+cat(tab_rvar_tex, file = "./data/tab_ratio_variances.tex")
 
 # additional lines to insert after line with text: \begin{tabular}{|r|r|r|r|r|}
 # \hline
