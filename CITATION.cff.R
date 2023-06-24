@@ -1,0 +1,14 @@
+cff-version: 1.0.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Wieczorkowski
+given-names: Robert
+- family-names: Wójciak
+given-names: Wojciech
+orcid: https://orcid.org/0000-0002-5042-160X
+- family-names: Wesołowski
+given-names: Jacek
+orcid: https://orcid.org/0000-0001-7615-694X
+title: "Numerical Performance of the RNABOX Algorithm"
+version: 1.0.1
+date-released: 2023-06-24
