@@ -11,5 +11,5 @@ authors:
     orcid: "https://orcid.org/0000-0002-5042-160X"
 title: "Numerical Performance of the RNABOX Algorithm"
 version: 1.0.1
-date-released: 2023-06-24
+date-released: 2022-11-07
 url: "https://github.com/rwieczor/recursive_Neyman_rnabox"
