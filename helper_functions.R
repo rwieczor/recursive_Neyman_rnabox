@@ -233,6 +233,7 @@ plot_times <- function(data,
   p <- ggplot(data = data, aes(x = f, y = Median_time)) +
     geom_point(size = 2, aes(shape = Algorithm)) +
     geom_line(aes(linetype = Algorithm)) +
+    geom_text_repel(data=data,aes(x=f,y=Median_time,label=n_iter)) +
     facet_wrap(~population, scales = "free_y") +
     labs(
       x = "Sample fraction",
