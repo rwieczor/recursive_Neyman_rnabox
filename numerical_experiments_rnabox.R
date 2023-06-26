@@ -36,6 +36,31 @@ load(file = "./data/pop.rds")
 # )
 load(file = "./data/exec_times.rds")
 
+# Adding variables containing information on number of iterations to the dataframes used in plots
+
+extimes1_niter <- group_by(extimes1$niter,Algorithm,f) %>% 
+  summarise(n_iter_total=mean(iterations_total),n_iter=paste(as.character(U_iter),collapse = ",")) %>%
+  mutate(n_iter=if_else(n_iter=='NA',paste0("(",n_iter_total,")"),paste0("(",n_iter_total,",",n_iter,")"))) %>% ungroup()
+dim(extimes1$et)
+extimes1$et <- left_join(extimes1$et,extimes1_niter,by=c("Algorithm","f"))
+dim(extimes1$et)
+
+extimes22_niter <- group_by(extimes22$niter,Algorithm,f) %>% 
+  summarise(n_iter_total=mean(iterations_total),n_iter=paste(as.character(U_iter),collapse = ",")) %>%
+  mutate(n_iter=if_else(n_iter=='NA',paste0("(",n_iter_total,")"),paste0("(",n_iter_total,",",n_iter,")"))) %>% ungroup()
+dim(extimes22$et)
+extimes22$et <- left_join(extimes22$et,extimes22_niter,by=c("Algorithm","f"))
+dim(extimes22$et)
+
+extimes3_niter <- group_by(extimes3$niter,Algorithm,f) %>% 
+    summarise(n_iter_total=mean(iterations_total),n_iter=paste(as.character(U_iter),collapse = ",")) %>%
+   mutate(n_iter=if_else(n_iter=='NA',paste0("(",n_iter_total,")"),paste0("(",n_iter_total,",",n_iter,")"))) %>% ungroup()
+dim(extimes3$et)
+extimes3$et <- left_join(extimes3$et,extimes3_niter,by=c("Algorithm","f"))
+dim(extimes3$et)
+
+
+
 # Create time plots ----
 
 p1_times <- plot_times(extimes1$et, title = NULL, legend.position = "none")
