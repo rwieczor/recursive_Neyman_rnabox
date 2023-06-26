@@ -114,7 +114,7 @@ get_variances_rounding <- function(pop) {
       var_cs <- stratallo::var_st_tsi(alc, Nh, Sh)
 
       # RNABOX
-      alc_rnabox <- stratallo::rnabox(n, dh, mh, Mh)
+      alc_rnabox <- stratallo::rnabox(n, dh, Mh, mh)
       alc_rnabox_round <- stratallo::round_oric(alc_rnabox)
       var_rnabox <- stratallo::var_st_tsi(alc_rnabox, Nh, Sh)
       var_rnabox_round <- stratallo::var_st_tsi(alc_rnabox_round, Nh, Sh)
@@ -142,7 +142,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
   sum_m <- sum(mh)
   sum_M <- sum(Mh)
 
-  tab <- NULL
+  tab_exec <- NULL
   tab_niter <- NULL
   samples_fractions <- seq(sum_m / N, sum_M / N, 0.1)
   for (f in samples_fractions) {
@@ -159,17 +159,16 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
       n_take_Neyman <- sum(alc > mh & alc < Mh)
 
       # RNABOX
-      alc_rnabox <- round(stratallo::rnabox(n, dh, mh, Mh))
+      alc_rnabox <- round(stratallo::rnabox(n, dh, Mh, mh))
       if (max(abs((alc_rnabox - alc))) > 1) {
         stop("Bad allocation rnabox!")
       }
-      alc_rnabox_debug <- stratallo:::rnabox_debug(n, dh, mh, Mh)
-      tab_rnabox_niter <- stratallo:::rnabox_debug_summary(alc_rnabox_debug$details, df, mh, Mh)
+      alc_rnabox_debug <- stratallo:::rnabox_debug(n, dh, Mh, mh)
+      tab_rnabox_niter <- stratallo:::rnabox_debug_summary(alc_rnabox_debug$details)
       tab_rnabox_niter <- data.frame(
         Algorithm = "RNABOX",
         f = f,
-        iterations_total = nrow(tab_rnabox_niter),
-        tab_rnabox_niter[, c("Iteration", "U_iter")]
+        n_iter = paste0("(", paste0(tab_rnabox_niter$tB1_iter, collapse = ","), ")")
       )
 
       # FPIA
@@ -181,12 +180,12 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
       tab_fpia_niter <- data.frame(
         Algorithm = "FPIA",
         f = f,
-        iterations_total = alc_fpi$iter
+        n_iter = paste0("(", alc_fpi$iter, ")")
       )
 
       ex <- microbenchmark(
         FPIA = stratallo:::fpia(n, Nh, Sh, mh, Mh)$nh,
-        RNABOX = stratallo::rnabox(n, dh, mh, Mh),
+        RNABOX = stratallo::rnabox(n, dh, Mh, mh),
         times = 100,
         unit = time_unit
       )
@@ -211,13 +210,13 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
           n_take_minmax = n_take_minmax,
           n_take_Neyman = n_take_Neyman
         )
-      tab <- bind_rows(tab, exi)
+      tab_exec <- bind_rows(tab_exec, exi)
       tab_niter <- bind_rows(tab_niter, tab_rnabox_niter, tab_fpia_niter)
     } else {
       sprintf("Skipped infeasbile f = %f", f)
     }
   }
-  list(et = tab, niter = tab_niter)
+  left_join(tab_exec, tab_niter, by = c("Algorithm", "f"))
 }
 
 plot_times <- function(data,
@@ -233,7 +232,7 @@ plot_times <- function(data,
   p <- ggplot(data = data, aes(x = f, y = Median_time)) +
     geom_point(size = 2, aes(shape = Algorithm)) +
     geom_line(aes(linetype = Algorithm)) +
-    geom_text_repel(data=data,aes(x=f,y=Median_time,label=n_iter)) +
+    geom_text_repel(data = data, aes(x = f, y = Median_time, label = n_iter)) +
     facet_wrap(~population, scales = "free_y") +
     labs(
       x = "Sample fraction",
