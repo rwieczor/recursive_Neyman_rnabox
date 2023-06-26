@@ -36,16 +36,16 @@ load(file = "./data/tab_exec_times.rds")
 # Create time plots ----
 
 p1_times <- plot_times(tab_et1, title = NULL, legend.position = "none")
-p2_times <- plot_times(tab_et2, title = NULL, legend.position = "none")
+p2_times <- plot_times(tab_et2, title = NULL, y_lab = NULL)
 p3_times <- plot_times(tab_et3, title = NULL, legend.position = "none")
 p11_times <- plot_times(tab_et11, title = NULL, legend.position = "none")
-p22_times <- plot_times(tab_et22, title = NULL, legend.position = "none")
+p22_times <- plot_times(tab_et22, title = NULL, y_lab = NULL)
 
 p1_take <- plot_take(tab_et1, legend.position = "none")
-p2_take <- plot_take(tab_et2, legend.position = "none")
+p2_take <- plot_take(tab_et2, y_lab = NULL)
 p3_take <- plot_take(tab_et3, legend.position = "none")
 p11_take <- plot_take(tab_et11, legend.position = "none")
-p22_take <- plot_take(tab_et22, legend.position = "none")
+p22_take <- plot_take(tab_et22, y_lab = NULL)
 
 # fig 1
 fig_3_2 <- p3_times + p2_times + p3_take + p2_take +
