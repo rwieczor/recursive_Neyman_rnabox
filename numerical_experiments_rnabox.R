@@ -14,33 +14,34 @@ library(patchwork)
 
 # R codes of helper functions and the RNABOX ----
 source("helper_functions.R")
-rnabox <- stratallo::rnabox
 
-# Generate populations, compute optimal alloc., compare times ----
-tab1 <- get_execution_times(pop_n = 1) # population generated with Nrep=100
-tab2 <- get_execution_times(pop_n = 2) # population generated with Nrep=200
-tab3 <- get_execution_times(pop_n = 3) # a small population
+# Generate populations.
+# pop1 <- gen_population_boxcnstr(1)
+# pop2 <- gen_population_boxcnstr(2)
+# pop3 <- gen_population_boxcnstr(3)
+# pop11 <- gen_population_boxcnstr(11)
+# pop22 <- gen_population_boxcnstr(22)
+# save(pop1, pop2, pop3, pop11, pop22, file = "./data/pop.rds")
+load(file = "./data/pop.rds")
 
-tab11 <- get_execution_times(pop_n = 11) # population generated with Nrep=100
-tab22 <- get_execution_times(pop_n = 22) # population generated with Nrep=200
-
-# saveRDS(tab1, "./data/tab1.rds")
-# saveRDS(tab2, "./data/tab2.rds")
-# saveRDS(tab3, "./data/tab3.rds")
-# saveRDS(tab11, "./data/tab11.rds")
-# saveRDS(tab22, "./data/tab22.rds")
-# tab1 <- readRDS("./data/tab1.rds")
-# tab2 <- readRDS("./data/tab2.rds")
-# tab3 <- readRDS("./data/tab3.rds")
-# tab11 <- readRDS("./data/tab11.rds")
-# tab22 <- readRDS("./data/tab22.rds")
+# Compute optimal allocations, get execution times, etc  ----
+# extimes1 <- get_execution_times(pop1)
+# extimes2 <- get_execution_times(pop2)
+# extimes3 <- get_execution_times(pop3)
+# extimes11 <- get_execution_times(pop11)
+# extimes22 <- get_execution_times(pop22)
+# save(
+#   extimes1, extimes2, extimes3, extimes11, extimes22,
+#   file = "./data/exec_times.rds"
+# )
+load(file = "./data/exec_times.rds")
 
 # Create time plots ----
 
-p1_times <- plot_times(tab1, title = NULL, legend.position = "none")
-p1_take <- plot_take(tab1, legend.position = "none")
-p22_times <- plot_times(tab22, title = NULL, y_lab = NULL)
-p22_take <- plot_take(tab22, y_lab = NULL)
+p1_times <- plot_times(extimes1$et, title = NULL, legend.position = "none")
+p1_take <- plot_take(extimes1$et, legend.position = "none")
+p22_times <- plot_times(extimes22$et, title = NULL, y_lab = NULL)
+p22_take <- plot_take(extimes22$et, y_lab = NULL)
 fig_1_22 <- p1_times + p22_times + p1_take + p22_take +
   plot_layout(ncol = 2, heights = c(2, 1)) +
   plot_annotation(
@@ -58,8 +59,8 @@ ggsave(
   height = 10 / 1.618 # height = 8/1.618
 )
 
-p3_times <- plot_times(tab3, title = NULL)
-p3_take <- plot_take(tab3)
+p3_times <- plot_times(extimes3$et, title = NULL)
+p3_take <- plot_take(extimes3$et)
 fig_3 <- p3_times + p3_take + plot_layout(nrow = 2, heights = c(2, 1)) &
   theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_3
@@ -75,11 +76,11 @@ ggsave(
 # Compute variances V and V0 ----
 
 options(digits = 6)
-(tab1_var <- get_variances_rounding(pop_n = 1))
-(tab2_var <- get_variances_rounding(pop_n = 2))
-(tab3_var <- get_variances_rounding(pop_n = 3))
-(tab11_var <- get_variances_rounding(pop_n = 11))
-(tab22_var <- get_variances_rounding(pop_n = 22))
+(tab1_var <- get_variances_rounding(pop1))
+(tab2_var <- get_variances_rounding(pop2))
+(tab3_var <- get_variances_rounding(pop3))
+(tab11_var <- get_variances_rounding(pop11))
+(tab22_var <- get_variances_rounding(pop22))
 
 cap <- "\\label{tab:}
 \\footnotesize Variances $V$ and $V_0$ are based on optimal (not necessarily integer)
