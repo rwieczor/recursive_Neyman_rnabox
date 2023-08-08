@@ -76,7 +76,7 @@ df1 <- data.frame(x = lam1, y = fg(lam1))
 df2 <- data.frame(x = lam2, y = fg(lam2))
 
 p1 <-
-  ggplot(data.frame(x = seq(500, 1700, by = 0.1)), aes(x)) +
+  ggplot(data.frame(x = seq(500, 1600, by = 0.1)), aes(x)) +
   geom_function(fun = Vectorize(fg), n = 20000, linewidth = 1) +
   geom_hline(yintercept = 0, color = "red") +
   geom_point(data = df0, aes(x = x, y = y), size = 4) +
@@ -93,21 +93,21 @@ p1 <-
   theme_bw(base_size = 12)
 
 p1 <- p1 +
-  annotate("text", x = lam0 - 10, y = -2, label = TeX("$\\lambda_0$"), size = 5) +
-  annotate("text", x = lam, y = -2, label = TeX("$\\lambda^{*}$"), size = 5) +
-  annotate("text", x = lam1, y = -2, label = TeX("$\\lambda_{1}$"), size = 5) +
-  annotate("text", x = lam2, y = -2, label = TeX("$\\lambda_{2}$"), size = 5)
+  annotate("text", x = lam0, y = 1, label = TeX("$\\lambda_0$"), size = 4) +
+  annotate("text", x = lam+20, y = 1, label = TeX("$\\lambda^{*}$"), size = 4) +
+  annotate("text", x = lam1, y = -1, label = TeX("$\\lambda_{1}$"), size = 4) +
+  annotate("text", x = lam2, y = -1, label = TeX("$\\lambda_{2}$"), size = 4)
 
 fphi <- function(x) {
   philambda(x, n, Nh, Sh, mh, Mh)
 }
 
-curve(Vectorize(fphi)(x), 500, 1700)
+curve(Vectorize(fphi)(x), 500, 1600)
 abline(a = 0, b = 1, col = 2)
 points(lam, fphi(lam), cex = 1.5, pch = 19, col = 3)
 points(lam0, fphi(lam0), cex = 1.5, pch = 19, col = 2) # wrong starting lambda
 
-x <- seq(1 - 6, 1700, by = 10)
+x <- seq(1 - 6, 1600, by = 10)
 y <- Vectorize(fphi)(x)
 x1 <- min(x[which(is.infinite(y))])
 x2 <- max(x[which(is.infinite(y))])
@@ -139,11 +139,12 @@ p2 <-
   theme_bw(base_size = 12)
 
 p2 <- p2 +
-  annotate("text", x = lam0, y = 0, label = TeX("$\\lambda_0$"), size = 5) +
-  annotate("text", x = lam, y = 0, label = TeX("$\\lambda^{*}$"), size = 5) +
-  annotate("text", x = lam1, y = 40, label = TeX("$\\lambda_{1}$"), size = 5) +
-  annotate("text", x = lam2, y = 40, label = TeX("$\\lambda_{2}$"), size = 5)
+  annotate("text", x = lam0, y = 0, label = TeX("$\\lambda_0$"), size = 4) +
+  annotate("text", x = lam, y = 0, label = TeX("$\\lambda^{*}$"), size = 4) +
+  annotate("text", x = lam1, y = 60, label = TeX("$\\lambda_{1}$"), size = 4) +
+  annotate("text", x = lam2, y = 60, label = TeX("$\\lambda_{2}$"), size = 4)
 
 pp <- p1 + p2
 # ggsave("fig_fixedpi.jpg",pp,device="jpg", dpi=1200, width = 8, height = 8/1.618)
 ggsave("./figures/fig_fpia.pdf", pp, device = "pdf", dpi = 1200, width = 8, height = 8 / 1.618)
+
