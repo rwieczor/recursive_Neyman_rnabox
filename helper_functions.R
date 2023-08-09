@@ -89,8 +89,8 @@ gen_population_boxcnstr <- function(pop_n = 1) {
     mh <- mh[ix]
     Mh <- Mh[ix]
   }
-  dh <- Sh * Nh
-  data.frame(Nh = Nh, Sh = Sh, dh = dh, mh = mh, Mh = Mh)
+  Ah <- Sh * Nh
+  data.frame(Nh = Nh, Sh = Sh, Ah = Ah, mh = mh, Mh = Mh)
 }
 
 # Creates data with variances for selected algorithms and different fractions
@@ -98,7 +98,7 @@ gen_population_boxcnstr <- function(pop_n = 1) {
 get_variances_rounding <- function(pop) {
   Nh <- pop$Nh
   Sh <- pop$Sh
-  dh <- pop$dh
+  Ah <- pop$Ah
   mh <- pop$mh
   Mh <- pop$Mh
   N <- sum(Nh)
@@ -114,7 +114,7 @@ get_variances_rounding <- function(pop) {
       var_cs <- stratallo::var_st_tsi(alc, Nh, Sh)
 
       # RNABOX
-      alc_rnabox <- stratallo::rnabox(n, dh, Mh, mh)
+      alc_rnabox <- stratallo::rnabox(n, Ah, Mh, mh)
       alc_rnabox_round <- stratallo::round_oric(alc_rnabox)
       var_rnabox <- stratallo::var_st_tsi(alc_rnabox, Nh, Sh)
       var_rnabox_round <- stratallo::var_st_tsi(alc_rnabox_round, Nh, Sh)
@@ -136,7 +136,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
   Sh <- pop$Sh
   mh <- pop$mh
   Mh <- pop$Mh
-  dh <- pop$dh
+  Ah <- pop$Ah
 
   N <- sum(Nh)
   sum_m <- sum(mh)
@@ -159,11 +159,11 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
       n_take_Neyman <- sum(alc > mh & alc < Mh)
 
       # RNABOX
-      alc_rnabox <- round(stratallo::rnabox(n, dh, Mh, mh))
+      alc_rnabox <- round(stratallo::rnabox(n, Ah, Mh, mh))
       if (max(abs((alc_rnabox - alc))) > 1) {
         stop("Bad allocation rnabox!")
       }
-      alc_rnabox_debug <- stratallo:::rnabox_debug(n, dh, Mh, mh)
+      alc_rnabox_debug <- stratallo:::rnabox_debug(n, Ah, Mh, mh)
       tab_rnabox_niter <- stratallo:::rnabox_debug_summary(alc_rnabox_debug$details)
       tab_rnabox_niter <- data.frame(
         Algorithm = "RNABOX",
@@ -185,7 +185,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
 
       ex <- microbenchmark(
         FPIA = stratallo:::fpia(n, Nh, Sh, mh, Mh)$nh,
-        RNABOX = stratallo::rnabox(n, dh, Mh, mh),
+        RNABOX = stratallo::rnabox(n, Ah, Mh, mh),
         times = 100,
         unit = time_unit
       )
