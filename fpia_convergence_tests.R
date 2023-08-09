@@ -15,7 +15,7 @@ Sh <- round(abs(rcauchy(4, 1)), 1)
 Sh[Sh == 0] <- 1
 mh <- rep(10, 4)
 Mh <- rep(50, 4)
-dh <- Sh * Nh
+Ah <- Sh * Nh
 N <- sum(Nh)
 (s1 <- sum(mh))
 (s2 <- sum(Mh))
@@ -42,8 +42,8 @@ lam <- uniroot(function(x) glambda(x, n, Nh, Sh, mh, Mh),
 lam
 
 # Initial interval for bisection, according to JW.
-rm <- dh / mh
-rM <- dh / Mh
+rm <- Ah / mh
+rM <- Ah / Mh
 r <- c(rm, rM)
 a <- min(r)^2
 b <- max(r)^2
