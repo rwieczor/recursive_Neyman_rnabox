@@ -22,20 +22,20 @@ N <- sum(Nh)
 (n <- round(0.2 * N))
 
 # Valid optimal allocation: (13, 10,  10,  47).
-(alloc0 <- CapacityScaling(n, Nh, Sh, mh = mh, Mh = Mh))
+(alloc0 <- CapacityScaling(n, Ah, mh = mh, Mh = Mh))
 
-(lam0 <- (sum(Sh * Nh)^2) / (n^2))
+(lam0 <- (sum(Ah)^2) / (n^2))
 
 # Default starting value lambda0 - wrong allocation (no convergence).
-(al_test <- fpia(n, Nh, Sh, mh, Mh, lambda0 = lam0, maxiter = 100)$nh)
+(al_test <- fpia(n, Ah, mh, Mh, lambda0 = lam0, maxiter = 100)$nh)
 
 # Values causing oscillations of the algorithm.
 lam1 <- 1444
 lam2 <- 739.84
 
 # Starting value, better approximated.
-# lam<-uniroot(function(x) glambda(x,n,Nh,Sh,mh,Mh),lower = lam0/1e8, upper=lam0*1e8)$root
-lam <- uniroot(function(x) glambda(x, n, Nh, Sh, mh, Mh),
+# lam <- uniroot(function(x) glambda(x, n, Ah, mh, Mh), lower = lam0/1e8, upper = lam0*1e8)$root
+lam <- uniroot(function(x) glambda(x, n, Ah, mh, Mh),
   lower = lam0 / 10, upper = lam0 * 10,
   extendInt = "yes"
 )$root
@@ -48,15 +48,15 @@ r <- c(rm, rM)
 a <- min(r)^2
 b <- max(r)^2
 
-lam <- uniroot(function(x) glambda(x, n, Nh, Sh, mh, Mh), lower = a, upper = b)$root
+lam <- uniroot(function(x) glambda(x, n, Ah, mh, Mh), lower = a, upper = b)$root
 lam # lambda_{*}
 
 # Correct optimal allocation.
-(al_test <- fpia(n, Nh, Sh, mh, Mh, lambda0 = lam)$nh)
+(al_test <- fpia(n, Ah, mh, Mh, lambda0 = lam)$nh)
 
 # Pictures of g(lambda) function, the root of which we search.
 fg <- function(x) {
-  glambda(x, n, Nh, Sh, mh, Mh)
+  glambda(x, n, Ah, mh, Mh)
 }
 
 curve(Vectorize(fg)(x), 1e-6, 1700, ylim = c(-15, 15))
@@ -94,12 +94,12 @@ p1 <-
 
 p1 <- p1 +
   annotate("text", x = lam0, y = 1, label = TeX("$\\lambda_0$"), size = 4) +
-  annotate("text", x = lam+20, y = 1, label = TeX("$\\lambda^{*}$"), size = 4) +
+  annotate("text", x = lam + 20, y = 1, label = TeX("$\\lambda^{*}$"), size = 4) +
   annotate("text", x = lam1, y = -1, label = TeX("$\\lambda_{1}$"), size = 4) +
   annotate("text", x = lam2, y = -1, label = TeX("$\\lambda_{2}$"), size = 4)
 
 fphi <- function(x) {
-  philambda(x, n, Nh, Sh, mh, Mh)
+  philambda(x, n, Ah, mh, Mh)
 }
 
 curve(Vectorize(fphi)(x), 500, 1600)
@@ -147,4 +147,3 @@ p2 <- p2 +
 pp <- p1 + p2
 # ggsave("fig_fixedpi.jpg",pp,device="jpg", dpi=1200, width = 8, height = 8/1.618)
 ggsave("./figures/fig_fpia.pdf", pp, device = "pdf", dpi = 1200, width = 8, height = 8 / 1.618)
-

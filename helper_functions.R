@@ -77,7 +77,7 @@ gen_population_boxcnstr <- function(pop_n = 1) {
     if (pop_n == 1 || pop_n == 2) {
       mh <- integer(length(Nh)) # initial lower bounds = 0
       n <- round(0.1 * sum(Nh))
-      alc <- stratallo:::CapacityScaling(n, Nh, Sh, mh = mh, Mh = Mh)
+      alc <- stratallo:::CapacityScaling(n, Nh * Sh, mh = mh, Mh = Mh)
       mh <- pmin(100, Mh) # additional lower constraints
       ix <- which(alc > 2 & mh != Mh)
     } else {
@@ -110,7 +110,7 @@ get_variances_rounding <- function(pop) {
 
     if (n > sum(mh) && n < sum(Mh)) {
       # CapacityScaling
-      alc <- stratallo:::CapacityScaling(n, Nh, Sh, mh = mh, Mh = Mh)
+      alc <- stratallo:::CapacityScaling(n, Ah, mh = mh, Mh = Mh)
       var_cs <- stratallo::var_st_tsi(alc, Nh, Sh)
 
       # RNABOX
@@ -150,7 +150,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
     n <- round(f * N)
 
     if (n > sum_m && n < sum_M) {
-      alc <- stratallo:::CapacityScaling(n, Nh, Sh, mh = mh, Mh = Mh)
+      alc <- stratallo:::CapacityScaling(n, Ah, mh = mh, Mh = Mh)
       n_take_min <- sum(alc <= mh) # number of take-min strata
       n_take_max <- sum(alc >= Mh) # number of take-max strata
       n_take_minmax <- sum(mh == Mh)
@@ -172,7 +172,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
       )
 
       # FPIA
-      alc_fpi <- stratallo:::fpia(n, Nh, Sh, mh, Mh)
+      alc_fpi <- stratallo:::fpia(n, Ah, mh, Mh)
       alc_fpi_nh <- round(alc_fpi$nh)
       if (max(abs((alc_fpi_nh - alc))) > 1) {
         stop("Bad allocation stratallo:::fpia!")
@@ -184,7 +184,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
       )
 
       ex <- microbenchmark(
-        FPIA = stratallo:::fpia(n, Nh, Sh, mh, Mh)$nh,
+        FPIA = stratallo:::fpia(n, Ah, mh, Mh)$nh,
         RNABOX = stratallo::rnabox(n, Ah, Mh, mh),
         times = 100,
         unit = time_unit
