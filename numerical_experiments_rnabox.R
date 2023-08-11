@@ -27,19 +27,20 @@ load(file = "./data/pop.rds")
 
 # Compute optimal allocations, get execution times, etc.  ----
 
-# tab_et1 <- get_execution_times(pop1)
-# tab_et2 <- get_execution_times(pop2)
-# tab_et3 <- get_execution_times(pop3)
-# tab_et11 <- get_execution_times(pop11)
-# tab_et22 <- get_execution_times(pop22)
+# tab_et1 <- get_execution_times(pop1, time_unit = "microseconds")
+# tab_et2 <- get_execution_times(pop2, time_unit = "microseconds")
+# tab_et3 <- get_execution_times(pop3, time_unit = "microseconds")
+# tab_et11 <- get_execution_times(pop11, time_unit = "microseconds")
+# tab_et22 <- get_execution_times(pop22, time_unit = "microseconds")
 # save(tab_et1, tab_et2, tab_et3, tab_et11, tab_et22, file = "./data/tab_exec_times.rds")
 load(file = "./data/tab_exec_times.rds")
 
 # Create time plots ----
 
-p1_times <- plot_times(tab_et1, title = NULL, legend.position = "none")
-p2_times <- plot_times(tab_et2, title = NULL, legend.position = "none")
-p3_times <- plot_times(tab_et3, title = NULL, legend.position = "none")
+y_lab <- "Median Time [microseconds]"
+p1_times <- plot_times(tab_et1, title = NULL, legend.position = "none", y_lab = y_lab)
+p2_times <- plot_times(tab_et2, title = NULL, legend.position = "none", y_lab = y_lab)
+p3_times <- plot_times(tab_et3, title = NULL, legend.position = "none", y_lab = y_lab)
 p11_times <- plot_times(tab_et11, title = NULL, y_lab = NULL)
 p22_times <- plot_times(tab_et22, title = NULL, y_lab = NULL)
 
@@ -64,7 +65,7 @@ ggsave(
   device = "pdf",
   dpi = 600,
   width = 12,
-  height = 10 / 1.618 # height = 8/1.618
+  height = 10 / 1.6
 )
 
 # Compute variances V and V0 ----

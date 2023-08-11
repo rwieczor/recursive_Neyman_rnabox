@@ -222,7 +222,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
 plot_times <- function(data,
                        legend.position = "right",
                        title = "Time comparison of selected algorithms",
-                       y_lab = "Time [miliseconds]") {
+                       y_lab = "Median Time [miliseconds]") {
   data <- data %>% mutate(
     population = paste(H, "strata, N =", N),
     f = round(f, 2),
