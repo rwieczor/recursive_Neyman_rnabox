@@ -33,9 +33,9 @@ gen_population <- function(Nrep = 10, seed = NULL) {
     # di <- data.frame(x= sqrt(abs(rcauchy(10000, scale=sigma))))
     ## di <- data.frame(x=abs(rnorm(10000, sd=1)))
 
-    bh <- stratification::strata.geo(x = di$x, CV = 0.05, Ls = Ls)$bh
-    ## bh<-strata.cumrootf(x=di$x, CV=0.05, Ls=Ls)$bh
-    di$h <- (i - 1) * Ls + as.numeric(cut(di$x, breaks = c(0, bh, Inf)))
+    strata_boundaries <- stratification::strata.geo(x = di$x, CV = 0.05, Ls = Ls)$bh
+    ## strata_boundaries<-strata.cumrootf(x=di$x, CV=0.05, Ls=Ls)$bh
+    di$h <- (i - 1) * Ls + as.numeric(cut(di$x, breaks = c(0, strata_boundaries, Inf)))
     d <- bind_rows(d, di)
   }
   d$h <- as.factor(d$h)
