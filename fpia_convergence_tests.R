@@ -146,4 +146,4 @@ p2 <- p2 +
 
 pp <- p1 + p2
 # ggsave("fig_fixedpi.jpg",pp,device="jpg", dpi=1200, width = 8, height = 8/1.618)
-ggsave("./figures/fig_fpia.pdf", pp, device = "pdf", dpi = 1200, width = 8, height = 8 / 1.618)
+ggsave("./figures/fig_fpia_oscillations.pdf", pp, device = "pdf", dpi = 1200, width = 8, height = 8 / 1.618)
