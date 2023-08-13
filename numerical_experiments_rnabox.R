@@ -97,6 +97,7 @@ cat(tab_var_tex)
 
 # additional lines to insert after line with text: \begin{tabular}{|r|r|r|r|r|}
 # \hline
-# & \multicolumn{2}{c|}{$H = 691 ~ (N = 990403)$} & \multicolumn{2}{c|}{$H = 703 ~ (N = 991226)$} \\ \hline
+# & \multicolumn{2}{c|}{$691 \text{ strata } ~ (N = 990403)$} & \multicolumn{2}{c|}{$703 \text{ strata } ~ (N = 991226)$} \\
+# \hline
 # table header should be replaced with
 # $f$ & $n = f * N$ & $V/V_{int}$ & $n = f * N$ & $V/V_{int}$ \\ \hline
