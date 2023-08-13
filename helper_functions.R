@@ -95,7 +95,7 @@ gen_population_boxcnstr <- function(pop_n = 1) {
 
 # Creates data with variances for selected algorithms and different fractions
 # (examination of rounding effect)
-get_variances_rounding <- function(pop) {
+get_variances_rounding <- function(pop, fractions = seq(0.1, 0.9, 0.1)) {
   Nh <- pop$Nh
   Sh <- pop$Sh
   Ah <- pop$Ah
@@ -104,23 +104,23 @@ get_variances_rounding <- function(pop) {
   N <- sum(Nh)
 
   tab <- NULL
-  for (f in seq(0.1, 0.5, 0.1)) {
+  for (f in fractions) {
     print(paste("Fraction:", f))
     n <- round(f * N)
 
-    if (n > sum(mh) && n < sum(Mh)) {
+    if (n >= sum(mh) && n <= sum(Mh)) {
       # CapacityScaling
-      alc <- stratallo:::CapacityScaling(n, Ah, mh = mh, Mh = Mh)
-      var_cs <- stratallo::var_st_tsi(alc, Nh, Sh)
+      alloc_cs <- stratallo:::CapacityScaling(n, Ah, mh = mh, Mh = Mh)
+      var_cs <- stratallo::var_st_tsi(alloc_cs, Nh, Sh)
 
       # RNABOX
-      alc_rnabox <- stratallo::rnabox(n, Ah, Mh, mh)
-      alc_rnabox_round <- stratallo::round_oric(alc_rnabox)
-      var_rnabox <- stratallo::var_st_tsi(alc_rnabox, Nh, Sh)
-      var_rnabox_round <- stratallo::var_st_tsi(alc_rnabox_round, Nh, Sh)
+      alloc_rnabox <- stratallo::rnabox(n, Ah, Mh, mh)
+      alloc_rnabox_round <- stratallo::round_oric(alloc_rnabox)
+      var_rnabox <- stratallo::var_st_tsi(alloc_rnabox, Nh, Sh)
+      var_rnabox_round <- stratallo::var_st_tsi(alloc_rnabox_round, Nh, Sh)
 
       tabi <- data.frame(
-        N = N, H = length(Nh), f = f, n = n, n_round = sum(alc_rnabox_round),
+        N = N, H = length(Ah), f = f, n = n, n_round = sum(alloc_rnabox_round),
         rv_rnabox = var_rnabox / var_cs,
         rv_rnabox_round = var_rnabox_round / var_cs
       )
@@ -132,11 +132,10 @@ get_variances_rounding <- function(pop) {
 
 # Creates data with times for selected algorithms and different fractions
 get_execution_times <- function(pop, time_unit = "milliseconds") {
+  Ah <- pop$Ah
   Nh <- pop$Nh
-  Sh <- pop$Sh
   mh <- pop$mh
   Mh <- pop$Mh
-  Ah <- pop$Ah
 
   N <- sum(Nh)
   sum_m <- sum(mh)
@@ -204,7 +203,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
           sum_M = sum_M,
           N = N,
           f = f,
-          H = length(Nh),
+          H = length(Ah),
           n_take_min = n_take_min,
           n_take_max = n_take_max,
           n_take_minmax = n_take_minmax,

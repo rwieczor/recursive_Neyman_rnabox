@@ -79,32 +79,24 @@ options(digits = 6)
 # save(tab_var1, tab_var2, tab_var3, tab_var11, tab_var22, file = "./data/tab_var.rds")
 load(file = "./data/tab_var.rds")
 
-cap <- "\\label{tab:}
-\\footnotesize Variances $V$ and $V_0$ are based on optimal (not necessarily integer)
-and optimal integer allocations respectively.
-For variances $\\tilde{V}$, based on rounded optimal non-integer allocation,
-we systematically get $\\tilde{V}/V_0=1$ (up to five decimal digits)."
-
-tab_rvar <- bind_cols(
-  dplyr::select(tab_var1, f, n1 = n, rv1 = rv_rnabox),
-  dplyr::select(tab_var2, n2 = n, rv2 = rv_rnabox),
+tab_var <- bind_cols(
+  dplyr::select(tab_var2, f, n2 = n, rv2 = rv_rnabox),
   dplyr::select(tab_var11, n11 = n, rv11 = rv_rnabox),
-  dplyr::select(tab_var22, n22 = n, rv22 = rv_rnabox)
 )
-colnames(tab_rvar) <- c(
+
+colnames(tab_var) <- c(
   "fraction",
-  "$n$", "$V/V_0$",
-  "$n$", "$V/V_0$",
-  "$n$", "$V/V_0$",
-  "$n$", "$V/V_0$"
+  "$n = f * N$", "$V/V_{int}$",
+  "$n = f * N$", "$V/V_{int}$"
 )
-tab_rvar_tex <- knitr::kable(tab_rvar,
-  format = "latex", digits = 6, align = "r",
-  caption = cap
+
+tab_var_tex <- knitr::kable(tab_var,
+  format = "latex", digits = 6, align = "r"
 )
-cat(tab_rvar_tex, file = "./data/tab_ratio_variances.tex")
+cat(tab_var_tex)
 
 # additional lines to insert after line with text: \begin{tabular}{|r|r|r|r|r|}
 # \hline
-# sample  & \multicolumn{2}{|c|}{$H=373$} & \multicolumn{2}{|c|}{$H=691$} \\
-# \cline{2-5}
+# & \multicolumn{2}{c|}{$H = 691 ~ (N = 990403)$} & \multicolumn{2}{c|}{$H = 703 ~ (N = 991226)$} \\ \hline
+# table header should be replaced with
+# $f$ & $n = f * N$ & $V/V_{int}$ & $n = f * N$ & $V/V_{int}$ \\ \hline
