@@ -221,6 +221,7 @@ get_execution_times <- function(pop, time_unit = "milliseconds") {
 plot_times <- function(data,
                        legend.position = "right",
                        title = "Time comparison of selected algorithms",
+                       x_lab = "Total sample size (as fraction of N)",
                        y_lab = "Median Time [miliseconds]") {
   data <- data %>% mutate(
     population = paste(H, "strata, N =", N),
@@ -234,7 +235,7 @@ plot_times <- function(data,
     geom_text_repel(data = data, aes(x = f, y = Median_time, label = n_iter)) +
     facet_wrap(~population, scales = "free_y") +
     labs(
-      x = "Sample fraction",
+      x = x_lab,
       y = y_lab,
       color = "Algorithms: ",
       title = title
@@ -252,7 +253,8 @@ plot_times <- function(data,
   p
 }
 
-plot_take <- function(data, legend.position = "right", y_lab = "Number of strata") {
+plot_take <- function(data, legend.position = "right", x_lab = "Total sample size (as fraction of N)",
+                      y_lab = "Number of strata") {
   data <- data %>% mutate(
     population = paste(H, "strata, N =", N),
     f = round(f, 2),
@@ -289,7 +291,7 @@ plot_take <- function(data, legend.position = "right", y_lab = "Number of strata
       strip.background = element_blank(),
       strip.text.x = element_blank(),
     ) +
-    labs(x = "Sample fraction", y = y_lab) +
+    labs(x = x_lab, y = y_lab) +
     coord_cartesian(xlim = c(0.1, 1)) +
     scale_x_continuous(breaks = scales::pretty_breaks(5)) +
     scale_y_continuous(

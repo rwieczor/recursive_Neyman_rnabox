@@ -100,4 +100,4 @@ cat(tab_var_tex)
 # & \multicolumn{2}{c|}{$691 \text{ strata } ~ (N = 990403)$} & \multicolumn{2}{c|}{$703 \text{ strata } ~ (N = 991226)$} \\
 # \hline
 # table header should be replaced with
-# $f$ & $n = f * N$ & $V/V_{int}$ & $n = f * N$ & $V/V_{int}$ \\ \hline
+# fraction & $n = \text{ fraction } \cdot N$ & $V/V_{int}$ & $n = \text{ fraction } \cdot N$ & $V/V_{int}$ \\ \hline
