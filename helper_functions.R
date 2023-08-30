@@ -29,7 +29,7 @@ gen_population <- function(Nrep = 10, seed = NULL) {
   for (i in 1:Nrep) {
     sigma <- log(i + 1)
     cat("iteration ", i, " sigma ", sigma, "\n")
-    di <- data.frame(x = exp(rnorm(10000, sd = sigma)))
+    di <- data.frame(x = rlnorm(10000, sdlog = sigma))
     # di <- data.frame(x= sqrt(abs(rcauchy(10000, scale=sigma))))
     ## di <- data.frame(x=abs(rnorm(10000, sd=1)))
 
