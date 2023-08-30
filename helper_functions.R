@@ -5,7 +5,9 @@
 #'   Simulated population is used for computing parameters needed for allocation
 #'   algorithms.
 #'
-#' @param Nrep - number of iterations for sequential generation of population.
+#' @param Nrep - number of iterations for sequential generation of population,
+#'
+#' @param seed - seed for reproducible random numbers.
 #'
 #' @return list with parameters of generated population i.e.
 #'  Nh - vector of population sizes in strata,
