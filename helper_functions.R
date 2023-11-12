@@ -266,7 +266,7 @@ plot_take <- function(data, legend.position = "right", x_lab = "Total sample siz
 
   tab_take <- tidyr::gather(
     data[data$Algorithm == "RNABOX", ],
-    "series",
+    "set",
     "value",
     c("n_take_max", "n_take_Neyman", "n_take_min", "n_take_minmax"),
     factor_key = TRUE
@@ -274,15 +274,15 @@ plot_take <- function(data, legend.position = "right", x_lab = "Total sample siz
   tab_take <- tab_take[tab_take$value != 0, ]
   tab_take$pct <- round((tab_take$value / tab_take$H) * 100, 1)
 
-  # tab_take$series must be a factor with levels: "n_take_max", "n_take_Neyman", "n_take_max".
+  # tab_take$set must be a factor with levels: "n_take_max", "n_take_Neyman", "n_take_max".
   p <- ggplot(data = tab_take, mapping = aes(x = f, y = value)) +
     geom_bar(
-      mapping = aes(fill = series), position = "stack", stat = "identity", width = 0.03
+      mapping = aes(fill = set), position = "stack", stat = "identity", width = 0.03
     ) +
     facet_wrap(~population) +
     scale_fill_manual(
       drop = TRUE,
-      name = "Series",
+      name = "Strata Set",
       values = c("grey20", "grey55", "grey80", "green"),
       labels = c("take-max", "take-Neyman", "take-min", "take-min/take-max \n(m = M)")
     ) +
