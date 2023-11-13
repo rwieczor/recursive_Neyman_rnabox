@@ -60,7 +60,7 @@ fig_2_11 <- p2_times + p11_times + p2_take + p11_take +
   theme(legend.justification = "left", legend.text = element_text(face = "italic"))
 fig_2_11
 ggsave(
-  "./figures/fig_rnabox_2_11.pdf",
+  "./figures/rnabox_fig_time_comparisons.pdf",
   fig_2_11,
   device = "pdf",
   dpi = 600,
