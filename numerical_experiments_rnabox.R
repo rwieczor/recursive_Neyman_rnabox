@@ -1,7 +1,8 @@
-# R code with numerical experiments from paper (in preparation):
-# Wesolowski, J., Wieczorkowski, R., Wojciak, W. (2023?),
+# R code with numerical experiments from paper:
+# Wesolowski, J., Wieczorkowski, R., Wojciak, W., 
 # Recursive Neyman Algorithm for Optimum Sample Allocation under Box Constraints
-# on Sample Sizes in Strata.
+# on Sample Sizes in Strata, 
+# Survey Methodology, December 2024, Vol. 50, No. 2, pp. 487-511
 
 # Load libraries ----
 library(dplyr)
