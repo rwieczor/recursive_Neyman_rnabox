@@ -113,13 +113,13 @@ get_variances_rounding <- function(pop, fractions = seq(0.1, 0.9, 0.1)) {
     if (n >= sum(mh) && n <= sum(Mh)) {
       # CapacityScaling
       alloc_cs <- stratallo:::CapacityScaling(n, Ah, mh = mh, Mh = Mh)
-      var_cs <- stratallo::var_st_tsi(alloc_cs, Nh, Sh)
+      var_cs <- stratallo::var_stsi(alloc_cs, Nh, Sh)
 
       # RNABOX
       alloc_rnabox <- stratallo::rnabox(n, Ah, Mh, mh)
       alloc_rnabox_round <- stratallo::round_oric(alloc_rnabox)
-      var_rnabox <- stratallo::var_st_tsi(alloc_rnabox, Nh, Sh)
-      var_rnabox_round <- stratallo::var_st_tsi(alloc_rnabox_round, Nh, Sh)
+      var_rnabox <- stratallo::var_stsi(alloc_rnabox, Nh, Sh)
+      var_rnabox_round <- stratallo::var_stsi(alloc_rnabox_round, Nh, Sh)
 
       tabi <- data.frame(
         N = N, H = length(Ah), f = f, n = n, n_round = sum(alloc_rnabox_round),
